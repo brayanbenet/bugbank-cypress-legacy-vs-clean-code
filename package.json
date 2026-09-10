@@ -1,0 +1,26 @@
+{
+  "name": "bugbank-cypress-legacy-vs-clean-code",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Suíte de testes automatizados com Cypress focada em Clean Code e Design Patterns",
+  "main": "index.js",
+  "scripts": {
+    "open": "npx cypress open",
+    "run": "npx cypress run",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "cypress",
+    "qa",
+    "automation",
+    "clean-code",
+    "pom"
+  ],
+  "author": "Brayan Benet",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^16.0.0",
+    "eslint": "^10.10.0",
+    "eslint-plugin-cypress": "^2.15.2"
+  }
+}
