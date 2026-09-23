@@ -19,6 +19,7 @@
   "author": "Brayan Benet",
   "license": "ISC",
   "devDependencies": {
+    "@cypress/xpath": "^2.0.3",
     "cypress": "^16.0.0",
     "eslint": "^10.10.0",
     "eslint-plugin-cypress": "^2.15.2"
