@@ -38,7 +38,7 @@ Em cenários de alta cadência de entrega, a falta de padronização na escrita 
 
 | Code Smell / Prática Legada | Impacto no Projeto | Solução Aplicada (Clean Code) |
 | :--- | :--- | :--- |
-| **Valores Fixos (*Hardcoding*)** | Engessa os testes e impede execução em múltiplos ambientes sem alterar código. | Uso de massa de dados dinâmica gerada via **Builder/Factory**. |
+| **Valores Fixos (*Hardcoding*)** | Engessa os testes e impede execução em múltiplos ambientes sem alterar código. | Uso de massa de dados dinâmica gerada via **Factory** (`@faker-js/faker`). |
 | **Localizadores Frágeis** | XPaths longos ou classes CSS estritas que quebram a cada mudança visual. | Atributos de teste dedicados (`data-cy`, `data-test-id`) e abstração em Page Objects. |
 | **Lógica Condicional / Repetição** | Aumenta a complexidade ciclomática e dificulta a leitura do fluxo de teste. | Ações lineares (Arrange, Act, Assert) e isolamento pelo Princípio da Responsabilidade Única (SRP). |
 | **Esperas Estáticas (`cy.wait`)** | Gera desperdício de tempo na esteira de CI ou falhas falsas por assincronismo. | Sincronismo inteligente e **esperas dinâmicas** do próprio Cypress. |
@@ -52,11 +52,8 @@ A versão refatorada adota padrões de projeto amplamente reconhecidos na litera
 ### 1. Page Object Model (POM)
 Encapsula a estrutura de elementos do DOM e ações da tela em classes dedicadas. O script de teste foca estritamente na **regra de negócio**, enquanto a classe Page cuida de *como* interagir com a interface.
 
-### 2. Test Data Builder Pattern
-Permite instanciar massas de dados complexas de forma fluida e incremental. O teste define apenas os campos relevantes para aquele cenário, mantendo a legibilidade e desacoplando os dados da execução.
-
-### 3. Factory Pattern
-Centraliza a criação e instanciação de componentes e instâncias complexas, simplificando a configuração do ambiente de teste e removendo redundâncias.
+### 2. Factory Pattern
+Centraliza a geração e criação de dados dinâmicos e instâncias de entidades para os testes (como utilizadores válidos ou cenários com dados inválidos), eliminando dados estáticos, reduzindo redundâncias e mantendo a massa de testes independente.
 
 ---
 
@@ -74,6 +71,7 @@ A aplicação de boas práticas foi acompanhada pela configuração do **ESLint*
 
 - **Framework de Testes:** [Cypress](https://www.cypress.io/)
 - **Linguagem:** JavaScript
+- **Massa de Dados Dinâmica:** [@faker-js/faker](https://fakerjs.dev/)
 - **Análise Estática / Linting:** [ESLint](https://eslint.org/)
 - **Aplicação Alvo:** BugBank (Aplicação Web Bancária Simulada)
 - **IDE / Ferramentas:** Cursor
@@ -87,11 +85,10 @@ A aplicação de boas práticas foi acompanhada pela configuração do **ESLint*
 ├── cypress/
 │   ├── e2e/
 │   │   ├── legacy/        # Testes em formato legado (sem padrões/acoplados)
-│   │   └── clean-code/     # Testes refatorados com POM, Builder e Factory
+│   │   └── clean-code/    # Testes refatorados com POM e Factory
 │   ├── support/
-│   │   ├── builders/      # Implementação do padrão Test Data Builder
-│   │   ├── factories/     # Implementação do padrão Factory
+│   │   ├── factories/     # Implementação do padrão Factory (geração de dados)
 │   │   └── pages/         # Implementação do Page Object Model (POM)
-├── .eslintrc.js           # Regras de governança estática
+├── eslint.config.js       # Regras de governança estática
 ├── cypress.config.js      # Configurações do Cypress
 └── package.json

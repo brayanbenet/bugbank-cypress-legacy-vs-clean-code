@@ -11,7 +11,7 @@ describe('Login BugBank - Legacy', () => {
         cy.get('#btnCloseModal').click();
         cy.get(':nth-child(1) > [name="email"]').type('testesemsaldo@gmail.com');
         cy.get('.style__ContainerFormLogin-sc-1wbjw6k-0 > .login__password > .style__ContainerFieldInput-sc-s3e9ea-0 > [name="password"]')
-        .type('1010');
+            .type('1010');
         cy.get('.otUnI').click()
         cy.get('.home__ContainerText-sc-1auj767-7 > :nth-child(2)').should('contain.text', 'bem vindo ao BugBank :)');
     });
