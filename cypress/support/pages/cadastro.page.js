@@ -17,41 +17,58 @@ class CadastroPage extends BasePage {
         this.clicar(this.botaoRegistrar)
     }
 
-    preencherDadosDeCadastro() {
+    preencherDadosDeCadastroValido() {
         const usuario = UsuarioFactory.criarUsuarioValido()
         this.preencherEmail(usuario.email)
         this.preencherNome(usuario.nome)
         this.preencherSenha(usuario.senha)
-        this.preencherConfirmacaoDeSenha(usuario.senha)
+        this.preencherConfirmacaoDeSenha(usuario.confirmacaoSenha)
+        return usuario
     }
 
     selecionarContaComSaldo() {
-        this.clicar(this.botaoCriarContaComSaldo, {force:true})
+        this.clicar(this.botaoCriarContaComSaldo, { force: true })
     }
 
     clicarEmCadastrar() {
         this.clicar(this.botaoCadastrar)
     }
 
-    preencherEmail(email) {
-        this.preencher(this.inputEmail, email)
+    preencherEmail(email) { this.preencher(this.inputEmail, email) }
+    preencherNome(nome) { this.preencher(this.inputNome, nome) }
+    preencherSenha(senha) { this.preencher(this.inputSenha, senha) }
+    preencherConfirmacaoDeSenha(senha) { this.preencher(this.inputConfirmacaoSenha, senha) }
+
+    extrairDadosDaConta() {
+        return cy.get(this.textoContaCriadaComSucesso)
+            .should("contain.text", "foi criada com sucesso")
+            .invoke("text")
+            .then((textoCompleto) => {
+                const [, conta, digito] = textoCompleto.match(/(\d+)-(\d+)/) || []
+                return { conta, digito }
+            })
     }
 
-    preencherNome(nome) {
-        this.preencher(this.inputNome, nome)
-    }
-
-    preencherSenha(senha) {
-        this.preencher(this.inputSenha, senha)
-    }
-
-    preencherConfirmacaoDeSenha(senha) {
-        this.preencher(this.inputConfirmacaoSenha, senha)
-    }
-
-    validarContaCriadaComSucesso() {
-        this.validarContemTextoNoElemento(this.textoContaCriadaComSucesso, "foi criada com sucesso")
+    fecharModalSucesso() {
         this.clicar(this.botaoFecharModalDeSucesso)
+    }
+
+    realizarCadastroCompleto(comSaldo = false) {
+        this.acessarTelaDeCadastro()
+        const usuario = this.preencherDadosDeCadastroValido()
+        if (comSaldo) {
+            this.selecionarContaComSaldo()
+        }
+        this.clicarEmCadastrar()
+
+        return this.extrairDadosDaConta().then((dadosConta) => {
+            this.fecharModalSucesso()
+            return cy.wrap({
+                ...usuario,
+                numeroConta: dadosConta.conta,
+                digitoConta: dadosConta.digito
+            })
+        })
     }
 }
 
